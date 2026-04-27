@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>
+    {% if mode == "smart" %}
+        🎯 Smart Practice 
+    {% else %}
+        🤖 AI Practice
+    {% endif %}
+</h2>
+
+<p>Difficulty: {{ difficulty }}</p>
+
+<div style="
+    background:#ef4444;
+    padding:10px;
+    border-radius:10px;
+    width:fit-content;
+    font-weight:bold;
+">
+    ⏱ Time Left: <span id="time">60</span>s
+</div>
+
+<form method="POST" action="/submit-ai-quiz">
+
+{% for q in questions %}
+<div class="card">
+<p>{{ loop.index }}. {{ q.question }}</p>
+
+<!-- hidden input to ensure question exists -->
+<input type="hidden" name="questions" value="{{ q.id }}">
+
+<label>
+  <input type="radio" name="q{{ q.id }}" value="{{ q.option_a }}">
+  {{ q.option_a }}
+</label><br>
+
+<label>
+  <input type="radio" name="q{{ q.id }}" value="{{ q.option_b }}">
+  {{ q.option_b }}
+</label><br>
+
+<label>
+  <input type="radio" name="q{{ q.id }}" value="{{ q.option_c }}">
+  {{ q.option_c }}
+</label><br>
+
+<label>
+  <input type="radio" name="q{{ q.id }}" value="{{ q.option_d }}">
+  {{ q.option_d }}
+</label>
+
+</div>
+{% endfor %}
+
+<button type="submit" style="background-color: rgb(28, 49, 204); color: rgb(246, 246, 246); border: 2px solid ; margin: 6px; padding: 5px;">Submit</button>
+</form><script>
+let timeLeft = 60;
+const timer = document.getElementById("time");
+
+const countdown = setInterval(() => {
+    timeLeft--;
+    timer.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        alert("Time's up! Submitting quiz...");
+        document.querySelector("form").submit();
+    }
+}, 1000);
+</script>
+
+{% endblock %}

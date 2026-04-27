@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+}
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+.card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+select, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+}
+button {
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+}
+.option {
+    background: #334155;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.correct { background: #16a34a !important; }
+.wrong { background: #dc2626 !important; }
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🤖 AI Practice</h1>
+
+<div class="card">
+    <label>Topic:</label>
+    <select id="topic">
+        <option value="aptitude">Aptitude</option>
+        <option value="logical">Logical</option>
+        <option value="verbal">Verbal</option>
+        <option value="mixed">Mixed</option>
+    </select>
+
+    <label>Difficulty:</label>
+    <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+    </select>
+
+    <br><br>
+    <button onclick="loadQuestions()">Generate Questions</button>
+    <button onclick="submitPractice()">Submit</button>
+
+    <p id="score">Score: 0</p>
+</div>
+
+<div id="questions"></div>
+
+</div>
+
+<script>
+let score = 0;
+let total = 0;
+let currentTopic = "";
+
+async function loadQuestions() {
+    score = 0;
+    document.getElementById("score").innerText = "Score: 0";
+
+    const topic = document.getElementById("topic").value;
+    const difficulty = document.getElementById("difficulty").value;
+
+    currentTopic = topic;
+
+    const res = await fetch('/generate-weak-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic, difficulty })
+    });
+
+    const data = await res.json();
+
+    const container = document.getElementById('questions');
+    container.innerHTML = "";
+
+    if (!data.questions || data.questions.length === 0) {
+        container.innerHTML = "<p>No questions generated ❌</p>";
+        return;
+    }
+
+    total = data.questions.length;
+
+    data.questions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.classList.add("card");
+
+        let optionsHTML = "";
+
+        q.options.forEach(opt => {
+            optionsHTML += `<div class="option" onclick="checkAnswer(this, '${q.answer}')">${opt}</div>`;
+        });
+
+        div.innerHTML = `
+            <p><b>${i+1}. ${q.question}</b></p>
+            ${optionsHTML}
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function checkAnswer(el, correct) {
+    if (el.classList.contains("correct") || el.classList.contains("wrong")) return;
+
+    if (el.innerText.trim() === correct) {
+        el.classList.add("correct");
+        score++;
+    } else {
+        el.classList.add("wrong");
+    }
+
+    document.getElementById("score").innerText = "Score: " + score;
+}
+
+async function submitPractice() {
+    if (total === 0) {
+        alert("Generate questions first");
+        return;
+    }
+
+    await fetch('/save-practice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            score: score,
+            total: total,
+            category: currentTopic
+        })
+    });
+}
+</script>
+
+</body>
+</html>

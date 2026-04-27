@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Practice</title>
+</head>
+<body>
+
+<h2>AI Generated Questions ({{ category }})</h2>
+
+{% for q in questions %}
+  <div style="margin-bottom:20px;">
+    <p><b>{{ q.question }}</b></p>
+
+    {% for opt in q.options %}
+      <p>{{ opt }}</p>
+    {% endfor %}
+
+    <p><b>Answer:</b> {{ q.answer }}</p>
+  </div>
+{% endfor %}
+
+<a href="/dashboard" class="btn">Back to Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .score-box {
+            text-align: center;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .question {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+            background: #334155;
+        }
+
+        .correct {
+            background: #16a34a !important;
+            color: white;
+        }
+
+        .wrong {
+            background: #dc2626 !important;
+            color: white;
+        }
+
+        .neutral {
+            opacity: 0.6;
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #3b82f6;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📊 Your Result</h1>
+
+    <div class="score-box">
+        Score: {{ score }} / {{ total }}
+    </div>
+
+    {% for r in results %}
+    <div class="question">
+        <p><b>{{ loop.index }}. {{ r.question }}</b></p>
+
+        {% for opt in r.options %}
+            {% set is_correct = (opt == r.correct_answer) %}
+            {% set is_user = (opt == r.user_answer) %}
+
+            <div class="option
+                {% if is_correct %} correct
+                {% elif is_user and not is_correct %} wrong
+                {% else %} neutral
+                {% endif %}
+            ">
+                {{ opt }}
+            </div>
+        {% endfor %}
+
+        <p>
+            Your Answer: <b>{{ r.user_answer if r.user_answer else "Not Answered" }}</b><br>
+            Correct Answer: <b>{{ r.correct_answer }}</b>
+        </p>
+        <p style="margin-top:10px; color:#93c5fd;">
+    {% if r.explanation %}
+<p><b>Explanation:</b></p>
+<pre style="white-space: pre-wrap;">{{ r.explanation }}</pre>
+{% else %}
+<p><b>Explanation:</b> Not available</p>
+{% endif %}
+    </div>
+    {% endfor %}
+
+    <a href="/dashboard" class="btn">Back to Dashboard</a>
+</div>
+
+</body>
+</html>

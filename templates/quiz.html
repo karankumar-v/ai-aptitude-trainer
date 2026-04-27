@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="GET" action="/quiz" style="margin-bottom:20px;">
+
+<select name="category" style="color: black;">
+    <option value="aptitude">Aptitude</option>
+   
+    <option value="reasoning">Reasoning</option>
+    <option value="verbal">Verbal</option>
+</select>
+
+<select name="topic" style="color: black;">
+    <option value="">All Topics</option>
+    <option value="time and work">Time & Work</option>
+    <option value="profit and loss">Profit & Loss</option>
+    <option value="percentages">Percentages</option>
+    <option value="ratio">Ratio</option>
+    <option value="coding">Coding</option>
+<option value="blood_relation">Blood Relation</option>
+<option value="direction">Direction</option>
+
+<option value="synonym">Synonym</option>
+<option value="antonym">Antonym</option>
+<option value="fill_blank">Fill in the blanks</option>
+<option value="error">error </option>
+</select>
+
+<select name="difficulty" style="color: black;">
+    <option value="">All Difficulty</option>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+</select>
+
+<button type="submit">Apply Filter</button>
+
+</form>
+
+
+<div style="
+    background:#ef4444;
+    padding:10px;
+    border-radius:10px;
+    width:fit-content;
+    font-weight:bold;
+">
+    ⏱ Time Left: <span id="time">60</span>s
+</div>
+
+<form method="POST" action="/submit_quiz">
+
+  <!-- ✅ MUST BE HERE -->
+  <input type="hidden" name="category" value="{{ category }}">
+
+  {% for q in questions %}
+    <p><b>{{ q.question }}</b></p>
+
+    <input type="radio" name="{{ q.id }}" value="{{ q.option1 }}"> {{ q.option1 }}<br>
+    <input type="radio" name="{{ q.id }}" value="{{ q.option2 }}"> {{ q.option2 }}<br>
+    <input type="radio" name="{{ q.id }}" value="{{ q.option3 }}"> {{ q.option3 }}<br>
+    <input type="radio" name="{{ q.id }}" value="{{ q.option4 }}"> {{ q.option4 }}<br>
+
+    <hr>
+  {% endfor %}
+
+  <button class="bg-blue-600 px-5 py-2 rounded">Submit</button>
+</form>
+<script>
+let timeLeft = 60;
+const timer = document.getElementById("time");
+
+const countdown = setInterval(() => {
+    timeLeft--;
+    timer.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        alert("Time's up! Submitting quiz...");
+        document.querySelector("form").submit();
+    }
+}, 1000);
+</script>
+
+{% endblock %}

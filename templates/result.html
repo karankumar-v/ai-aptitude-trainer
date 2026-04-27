@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">📊 Quiz Result</h1>
+
+<!-- Score Card -->
+<div class="mb-6 p-5 rounded-xl bg-white/10 backdrop-blur-lg shadow-lg">
+    <h2 class="text-xl">
+        Score: <span class="font-bold">{{ score }}/{{ total }}</span>
+
+        {% if score == total %}
+            <span class="text-green-400">🎉 Excellent!</span>
+        {% elif score >= total/2 %}
+            <span class="text-yellow-300">👍 Good job!</span>
+        {% else %}
+            <span class="text-red-400">❗ Needs improvement</span>
+        {% endif %}
+    </h2>
+</div>
+
+<!-- Questions Review -->
+{% for r in results %}
+<div class="bg-white/10 p-5 rounded-xl mb-6 shadow-md">
+
+    <p class="font-semibold mb-3">
+        {{ loop.index }}. {{ r.question }}
+    </p>
+
+    {% for opt in r.options %}
+
+        {% if opt == r.correct_answer %}
+            <div class="p-2 mb-2 rounded-lg bg-green-500/20 text-green-300">
+                ✔ {{ opt }}
+            </div>
+
+        {% elif opt == r.user_answer and not r.is_correct %}
+            <div class="p-2 mb-2 rounded-lg bg-red-500/20 text-red-300">
+                ✖ {{ opt }}
+            </div>
+
+        {% else %}
+            <div class="p-2 mb-2 rounded-lg bg-white/5">
+                {{ opt }}
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+</div>
+{% endfor %}
+
+<!-- Actions -->
+<div class="flex gap-4 mt-6">
+    <a href="/dashboard">
+        <button class="px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700">
+            ⬅ Back to Dashboard
+        </button>
+    </a>
+
+    <a href="/practice-weak-area">
+        <button class="px-5 py-2 bg-purple-600 rounded-lg hover:bg-purple-700">
+            🔁 Practice Again
+        </button>
+    </a>
+</div>
+
+{% endblock %}

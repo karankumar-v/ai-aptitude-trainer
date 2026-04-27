@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="text-3xl mb-6">🏆 Leaderboard</h1>
+
+<table class="w-full text-center bg-white/10 rounded-xl overflow-hidden">
+<tr class="bg-white/20">
+<th>Rank</th>
+<th>User</th>
+<th>Accuracy</th>
+<th>Total</th>
+</tr>
+
+{% for user in leaderboard %}
+<tr class="border-t border-white/20">
+<td>{{ loop.index }}</td>
+<td>{{ user.username }}</td>
+<td>{{ (user.total_score / user.total_questions) | round(2) if user.total_questions else 0 }}</td>
+<td>{{ user.total_questions }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

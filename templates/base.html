@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+
+<!-- Navbar -->
+<div class="flex justify-between items-center px-8 py-4 bg-white/10 backdrop-blur-lg">
+    <h1 class="text-xl font-bold">🤖 AI Trainer</h1>
+
+    <div class="space-x-6">
+        <a href="/dashboard" class="hover:text-blue-400">Dashboard</a>
+        <a href="/leaderboard" class="hover:text-blue-400">Leaderboard</a>
+        <a href="/logout" class="hover:text-red-400">Logout</a>
+        
+    </div>
+</div>
+
+<!-- Page Content -->
+<div class="max-w-5xl mx-auto mt-10 p-6 bg-white/10 backdrop-blur-lg rounded-2xl shadow-xl">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
