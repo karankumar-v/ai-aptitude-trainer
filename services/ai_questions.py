@@ -1,7 +1,9 @@
 import requests
 import json
 
-API_KEY = "YOUR_OPENROUTER_API_KEY"
+import os
+
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 def generate_questions(topic, difficulty):
     prompt = f"""
@@ -23,7 +25,7 @@ Return ONLY valid JSON like this:
     response = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
         headers={
-            "Authorization": f"Bearer {API_KEY}",
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json"
         },
         json={

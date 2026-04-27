@@ -9,8 +9,9 @@ from models.ai_question import AIQuestion
 from services.ai_feedback import generate_feedback
 import requests
 from flask import request, jsonify
+import os
 
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 # ✅ CREATE APP
 app = Flask(__name__)
